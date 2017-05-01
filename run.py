@@ -117,4 +117,4 @@ def train_FlappyBirdEnv(train=True):
 
 
 if __name__ == '__main__':
-    train_FlappyBirdEnv(False)
+    train_FlappyBirdEnv()
