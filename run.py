@@ -1,5 +1,4 @@
 import numpy as np
-import numpy as np
 import gym
 import sys
 import matplotlib.pyplot as plt
@@ -9,8 +8,11 @@ from core.model import SimpleNeuralNetwork
 from core.model import CNN
 from gym import wrappers
 sys.path.append("game/")
+import random
 import wrapped_flappy_bird as game
 import cv2
+import pickle
+
 
 class CartPoleEnv(Env):
     def __init__(self, monitor=False):
@@ -88,7 +90,7 @@ def runGame(env, network):
 
 
 def train_CartPole():
-    model = SimpleNeuralNetwork([4, 16, 2])
+    model = SimpleNeuralNetwork([4, 24, 2])
     env = CartPoleEnv()
     qnetwork = DeepQNetwork(
         model=model, env=env, learning_rate=0.0001, logdir='./tmp/CartPole/')
@@ -97,10 +99,16 @@ def train_CartPole():
     # runGame(env, qnetwork)
 
 
-
 def train_FlappyBirdEnv(train=True):
     model = CNN(img_w=image_size, img_h=image_size, num_outputs=2)
     env = FlappyBirdEnv()
+
+    def explore_policy(epsilon):
+        if random.random() < 0.95:
+            action_index = 0
+        else:
+            action_index = 1
+
     qnetwork = DeepQNetwork(
         model=model,
         env=env,
@@ -108,6 +116,7 @@ def train_FlappyBirdEnv(train=True):
         initial_epsilon=1,
         final_epsilon=0,
         decay_factor=0.999999,
+        explore_policy=explore_policy,
         save_per_step=1000,
         logdir='./tmp/FlappyBird/')
     if train:
@@ -117,4 +126,4 @@ def train_FlappyBirdEnv(train=True):
 
 
 if __name__ == '__main__':
-    train_FlappyBirdEnv()
+    train_CartPole()
