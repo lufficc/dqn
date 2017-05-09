@@ -108,6 +108,7 @@ def train_FlappyBirdEnv(train=True):
             action_index = 0
         else:
             action_index = 1
+        return action_index
 
     qnetwork = DeepQNetwork(
         model=model,
